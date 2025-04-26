@@ -1,11 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import '../../entry_point.dart';
-
-import '../../components/buttons/secondery_button.dart';
-import '../../components/welcome_text.dart';
-import '../../constants.dart';
-
 class FindRestaurantsScreen extends StatelessWidget {
   const FindRestaurantsScreen({super.key});
 
@@ -32,14 +24,13 @@ class FindRestaurantsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const WelcomeText(
-                title: "Find restaurants near you ",
+                title: "Organize seus Projetos",
                 text:
-                    "Please enter your location or allow access to \nyour location to find restaurants near you.",
+                    "Cadastre seus projetos e gerencie todas as suas obras em um só lugar.",
               ),
 
-              // Getting Current Location
               SeconderyButton(
-                press: () {},
+                press: () {}, // Você pode futuramente programar aqui "Novo Projeto"
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -53,7 +44,7 @@ class FindRestaurantsScreen extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      "Use current location",
+                      "Adicionar Novo Projeto",
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -64,12 +55,10 @@ class FindRestaurantsScreen extends StatelessWidget {
               ),
               const SizedBox(height: defaultPadding),
 
-              // New Address Form
               Form(
                 child: Column(
                   children: [
                     TextFormField(
-                      // onSaved: (value) => _location = value,
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!
@@ -84,14 +73,13 @@ class FindRestaurantsScreen extends StatelessWidget {
                                 bodyTextColor, BlendMode.srcIn),
                           ),
                         ),
-                        hintText: "Enter a new address",
+                        hintText: "Digite o nome da obra ou projeto",
                         contentPadding: kTextFieldPadding,
                       ),
                     ),
                     const SizedBox(height: defaultPadding),
                     ElevatedButton(
                       onPressed: () {
-                        // Use your onw way how you combine both New Address and Current Location
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -99,7 +87,7 @@ class FindRestaurantsScreen extends StatelessWidget {
                           ),
                         );
                       },
-                      child: const Text("Continue"),
+                      child: const Text("Continuar"),
                     ),
                   ],
                 ),

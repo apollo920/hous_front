@@ -1,12 +1,95 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert'; // Para trabalhar com JSON
 
-import '../../components/buttons/socal_button.dart';
-import '../../components/welcome_text.dart';
-import '../../constants.dart';
-import 'sign_up_screen.dart';
-import 'components/sign_in_form.dart';
+class SignInForm extends StatefulWidget {
+  const SignInForm({super.key});
+
+  @override
+  State<SignInForm> createState() => _SignInFormState();
+}
+
+class _SignInFormState extends State<SignInForm> {
+  final _formKey = GlobalKey<FormState>();
+  String email = '';
+  String password = '';
+  bool isLoading = false;
+
+  Future<void> login(BuildContext context) async {
+  setState(() {
+    isLoading = true;
+  });
+
+  final url = Uri.parse('http://10.0.2.2:8000/login/access-token');
+
+  final response = await http.post(
+    url,
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: {
+      'username': email,
+      'password': password,
+    },
+  );
+
+  setState(() {
+    isLoading = false;
+  });
+
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    final token = data['access_token'];
+
+    print('Login sucesso! Token: $token');
+
+    Navigator.pushReplacementNamed(context, '/home');
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Email ou senha incorretos!')),
+    );
+  }
+}
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Email Address',
+            ),
+            onChanged: (value) => email = value,
+            validator: (value) => value!.isEmpty ? 'Enter your email' : null,
+          ),
+          const SizedBox(height: 16),
+          TextFormField(
+            decoration: const InputDecoration(
+              labelText: 'Password',
+            ),
+            obscureText: true,
+            onChanged: (value) => password = value,
+            validator: (value) => value!.isEmpty ? 'Enter your password' : null,
+          ),
+          const SizedBox(height: 24),
+          isLoading
+              ? const CircularProgressIndicator()
+              : ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      login(context);
+                    }
+                  },
+                  child: const Text('Sign In'),
+                ),
+        ],
+      ),
+    );
+  }
+}
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -15,80 +98,13 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: const SizedBox(),
-        title: const Text("Sign In"),
+        title: const Text('Login'),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const WelcomeText(
-                title: "Welcome to",
-                text:
-                    "Enter your Phone number or Email \naddress for sign in. Enjoy your food :)",
-              ),
-              const SignInForm(),
-              const SizedBox(height: defaultPadding),
-              kOrText,
-              const SizedBox(height: defaultPadding * 1.5),
-
-              Center(
-                child: Text.rich(
-                  TextSpan(
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall!
-                        .copyWith(fontWeight: FontWeight.w600),
-                    text: "Don’t have account? ",
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: "Create new account.",
-                        style: const TextStyle(color: primaryColor),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen(),
-                                ),
-                              ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: defaultPadding),
-
-              // Facebook
-              SocalButton(
-                press: () {},
-                text: "Connect with Facebook",
-                color: const Color(0xFF395998),
-                icon: SvgPicture.asset(
-                  'assets/icons/facebook.svg',
-                  colorFilter: const ColorFilter.mode(
-                    Color(0xFF395998),
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              const SizedBox(height: defaultPadding),
-
-              // Google
-              SocalButton(
-                press: () {},
-                text: "Connect with Google",
-                color: const Color(0xFF4285F4),
-                icon: SvgPicture.asset(
-                  'assets/icons/google.svg',
-                ),
-              ),
-              const SizedBox(height: defaultPadding),
-            ],
-          ),
-        ),
+      body: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: SignInForm(), // Usa o formulário que você já tem
       ),
     );
   }
 }
+

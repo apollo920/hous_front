@@ -4,14 +4,14 @@ import '../../findRestaurants/find_restaurants_screen.dart';
 import '../../../constants.dart';
 import '../forgot_password_screen.dart';
 
-class SignInForm extends StatefulWidget {
+class OldSignInForm extends StatefulWidget {
   const SignInForm({super.key});
 
   @override
   State<SignInForm> createState() => _SignInFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
+class _OldSignInFormState extends State<SignInForm> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;

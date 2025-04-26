@@ -5,6 +5,7 @@ import '../../components/dot_indicators.dart';
 import '../auth/sign_in_screen.dart';
 import 'components/onboard_content.dart';
 
+
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -50,13 +51,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const SignInScreen(),
-                    ),
-                  );
-                },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SignInScreen(),
+                  ),
+                );
+              },
                 child: Text("Get Started".toUpperCase()),
               ),
             ),
